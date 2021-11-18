@@ -1,22 +1,36 @@
 package com.sahuyash.Book.service;
 
-import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
+import com.sahuyash.Book.controller.BookException;
+import com.sahuyash.Book.dao.BookRepository;
 import com.sahuyash.Book.entity.Book;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 
-public interface BookService {
+@Service
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
+public class BookService {
 
-    public List<Book> findAll();
-	
-	public Book findById(int theId);
-	
-	public void save(Book theEmployee);
-	
-	public void deleteById(int theId);
-	
-	public Page<Book> findBy(String search,Pageable pageable);
+    private final BookRepository repository;
+
+    public Collection<Book> getAll() {
+        return repository.findAll();
+    }
+
+    public Book addBook(Book theBook) {
+        return repository.save(theBook);
+    }
+
+    public Book updateBook(Book theBook) {
+        return repository.save(theBook);
+    }
+
+    public void deleteBook(int bookId) {
+        final Book book = repository.findById(bookId).orElseThrow(() -> new BookException("Book not available"));
+        repository.delete(book);
+    }
 }
